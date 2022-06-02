@@ -3,7 +3,8 @@ import 'package:provider/provider.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 
 class ImageViewer extends StatefulWidget {
-  const ImageViewer({Key? key}) : super(key: key);
+  final String? heroTag;
+  const ImageViewer({required this.heroTag, Key? key}) : super(key: key);
 
   @override
   State<ImageViewer> createState() => _ImageViewerState();
@@ -31,7 +32,7 @@ class _ImageViewerState extends State<ImageViewer> {
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           Hero(
-            tag: itemState.item!.uid!,
+            tag: widget.heroTag!,
             child: Image.asset(
               itemState.item!.images![current_image],
               height: size.height * 0.25,
@@ -47,9 +48,8 @@ class _ImageViewerState extends State<ImageViewer> {
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color: current_image == index
-                          ? Colors.grey
-                          : Colors.transparent,
+                      color:
+                          current_image == index ? Colors.amber : Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(20)),
                 margin: const EdgeInsets.symmetric(horizontal: 5),

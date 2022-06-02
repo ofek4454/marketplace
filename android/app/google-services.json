@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "978010516435",
+    "project_id": "weave-marketplace",
+    "storage_bucket": "weave-marketplace.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:978010516435:android:0c474a019c0acfbfba9d26",
+        "android_client_info": {
+          "package_name": "com.example.weave_marketplace"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "978010516435-18nvpkvq0fjmh0kjkbqe0g2p9qbkc2mk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDvGHPB3SlIb_-gK2Lin1iT47salufhieI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "978010516435-18nvpkvq0fjmh0kjkbqe0g2p9qbkc2mk.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

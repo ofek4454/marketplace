@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
+import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 
 class SuggestedItemCard extends StatelessWidget {
@@ -10,13 +12,14 @@ class SuggestedItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final itemState = Provider.of<ItemState>(context);
+    final basketState = Provider.of<BasketState>(context, listen: false);
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => ChangeNotifierProvider<ItemState>.value(
             value: itemState,
-            child: ItemScreen(),
+            child: ItemScreen(heroTag: '${itemState.item!.uid}suggested'),
           ),
         ),
       ),
@@ -39,7 +42,7 @@ class SuggestedItemCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    tag: itemState.item!.uid!,
+                    tag: '${itemState.item!.uid}suggested',
                     child: Image.asset(
                       itemState.item!.images![0],
                     ),
@@ -84,6 +87,18 @@ class SuggestedItemCard extends StatelessWidget {
                   icon: Icon(
                     itemState.is_fav ? Icons.favorite : Icons.favorite_border,
                   ),
+                ),
+              ),
+              Positioned(
+                bottom: 10,
+                right: 10,
+                child: IconButton(
+                  color: Colors.amber,
+                  onPressed: () {
+                    basketState.add_to_basket(itemState.item!);
+                    HapticFeedback.heavyImpact();
+                  },
+                  icon: const Icon(Icons.add_shopping_cart_outlined),
                 ),
               ),
             ],

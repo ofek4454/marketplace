@@ -42,10 +42,11 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     }
     res.forEach((element) => images.add(File(element.path)));
     setState(() {
-      if (res.isNotEmpty && last_selection == 0)
+      if (res.isNotEmpty && last_selection == 0) {
         progress = min(progress + 20, 100);
-      else if (res.isEmpty && last_selection != 0)
+      } else if (res.isEmpty && last_selection != 0) {
         progress = max(progress - 20, 0);
+      }
     });
   }
 
@@ -57,11 +58,13 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     });
   }
 
-  Widget _build_input_box(
-      {String? label,
-      bool? multiline = false,
-      TextEditingController? controller,
-      TextInputType keyboard = TextInputType.text}) {
+  Widget _build_input_box({
+    String? label,
+    bool? multiline = false,
+    TextEditingController? controller,
+    TextInputType keyboard = TextInputType.text,
+    Function? validator,
+  }) {
     final String last_val = controller!.text;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
@@ -92,12 +95,18 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
         ),
         keyboardType: keyboard,
         onFieldSubmitted: (val) {
-          if (val.isNotEmpty && last_val.isEmpty)
+          if (val.isNotEmpty && last_val.isEmpty) {
             setState(() {
               progress = min(progress + 20, 100);
             });
-          else if (val.isEmpty && last_val.isNotEmpty)
+          } else if (val.isEmpty && last_val.isNotEmpty) {
             progress = max(progress - 20, 0);
+          }
+        },
+        validator: (val) {
+          if (validator != null) return validator(val);
+          if (val == null || val.isEmpty) return 'invalid input';
+          return null;
         },
       ),
     );
@@ -141,6 +150,10 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
             ),
           ),
           onTap: () => _showMultiSelect(),
+          validator: (val) {
+            if (val == null || val.isEmpty) return 'please select category';
+            return null;
+          },
         ),
       ),
     );
@@ -172,10 +185,11 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
 
         _categories_controller.text = text;
 
-        if (text.isNotEmpty && last_selection.isEmpty)
+        if (text.isNotEmpty && last_selection.isEmpty) {
           progress = min(progress + 20, 100);
-        else if (text.isEmpty && last_selection.isNotEmpty)
+        } else if (text.isEmpty && last_selection.isNotEmpty) {
           progress = max(progress - 20, 0);
+        }
       });
     }
   }
@@ -220,10 +234,14 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                           controller: _decription_controller,
                         ),
                         _build_input_box(
-                          label: 'Price',
-                          keyboard: TextInputType.number,
-                          controller: _price_controller,
-                        ),
+                            label: 'Price',
+                            keyboard: TextInputType.number,
+                            controller: _price_controller,
+                            validator: (String? val) {
+                              if (val == null || val.isEmpty)
+                                return 'please select category';
+                              return null;
+                            }),
                         _build_category_picker(),
                       ],
                     ),

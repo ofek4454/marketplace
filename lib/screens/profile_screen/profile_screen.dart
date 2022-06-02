@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/services/auth.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({Key? key}) : super(key: key);
@@ -7,7 +8,11 @@ class ProfileScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       child: Center(
-        child: Text('Profile'),
+        child: TextButton(
+          child: Text('Log out'),
+          onPressed: () => Auth().signOut(),
+          style: TextButton.styleFrom(primary: Colors.red),
+        ),
       ),
     );
   }

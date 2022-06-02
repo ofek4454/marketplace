@@ -7,7 +7,8 @@ import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 
 class ItemScreen extends StatelessWidget {
-  const ItemScreen({Key? key}) : super(key: key);
+  final String? heroTag;
+  const ItemScreen({required this.heroTag, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -47,8 +48,8 @@ class ItemScreen extends StatelessWidget {
               Expanded(
                 child: ListView(
                   children: [
-                    const ImageViewer(),
-                    SizedBox(height: 10),
+                    ImageViewer(heroTag: heroTag),
+                    const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
