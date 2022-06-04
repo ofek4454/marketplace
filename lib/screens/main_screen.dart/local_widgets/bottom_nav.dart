@@ -19,7 +19,7 @@ class BottomNav extends StatelessWidget {
           ),
           onTap: () => change_page!(index),
           child: AnimatedContainer(
-            duration: Duration(milliseconds: 150),
+            duration: const Duration(milliseconds: 150),
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
               borderRadius: const BorderRadius.all(
@@ -52,7 +52,7 @@ class BottomNav extends StatelessWidget {
         ],
         color: Colors.white,
       ),
-      padding: EdgeInsets.symmetric(horizontal: 40),
+      padding: const EdgeInsets.symmetric(horizontal: 40),
       child: Row(
         children: [
           _build_btn(Icons.home_outlined, 0),

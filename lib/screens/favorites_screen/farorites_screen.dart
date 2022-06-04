@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
-import 'package:weave_marketplace/state_managment/store_state.dart';
 
 class FavoritesScreen extends StatelessWidget {
   const FavoritesScreen({Key? key}) : super(key: key);
@@ -13,7 +12,7 @@ class FavoritesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final basketState = Provider.of<BasketState>(context);
-    final storeState = Provider.of<StoreState>(context);
+    // final storeState = Provider.of<StoreState>(context);
 
     final size = MediaQuery.of(context).size;
 

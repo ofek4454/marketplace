@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names, avoid_function_literals_in_foreach_calls
+
 import 'dart:io';
 import 'dart:math';
 
@@ -19,13 +21,13 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
   final _formKey = GlobalKey<FormState>();
   double progress = 0.0;
   List<File> images = [];
-  Color? suffixColor = null;
+  Color? suffixColor;
   List<String> categories = [];
 
-  TextEditingController _categories_controller = TextEditingController();
-  TextEditingController _name_controller = TextEditingController();
-  TextEditingController _decription_controller = TextEditingController();
-  TextEditingController _price_controller = TextEditingController();
+  final TextEditingController _categories_controller = TextEditingController();
+  final TextEditingController _name_controller = TextEditingController();
+  final TextEditingController _decription_controller = TextEditingController();
+  final TextEditingController _price_controller = TextEditingController();
 
   Future<void> get_images() async {
     final int last_selection = images.length;
@@ -238,8 +240,9 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                             keyboard: TextInputType.number,
                             controller: _price_controller,
                             validator: (String? val) {
-                              if (val == null || val.isEmpty)
+                              if (val == null || val.isEmpty) {
                                 return 'please select category';
+                              }
                               return null;
                             }),
                         _build_category_picker(),
@@ -249,6 +252,27 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                 ),
                 ProgressBar(progress: progress),
                 const SizedBox(height: 10),
+                SizedBox(
+                  width: size.width * 0.85,
+                  height: 50,
+                  child: ElevatedButton(
+                    onPressed: () {},
+                    child: const Text(
+                      'Upload',
+                      style: TextStyle(
+                        fontFamily: 'Lato',
+                        fontSize: 18,
+                        color: Colors.white,
+                      ),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.black,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),

@@ -34,7 +34,7 @@ class SuggestedItemCard extends StatelessWidget {
           width: size.width * 0.6,
           child: Stack(
             alignment: Alignment.center,
-            overflow: Overflow.visible,
+            // overflow: Overflow.visible,
             children: [
               Column(
                 // mainAxisSize: MainAxisSize.min,

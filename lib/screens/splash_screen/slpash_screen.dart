@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
+  const SplashScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -12,12 +14,12 @@ class SplashScreen extends StatelessWidget {
             //   'assets/images/logo.png',
             //   width: MediaQuery.of(context).size.width * 0.7,
             // ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               'Loading...',
               style: Theme.of(context).textTheme.headline6,
             ),
-            SizedBox(height: 40),
+            const SizedBox(height: 40),
           ],
         ),
       ),

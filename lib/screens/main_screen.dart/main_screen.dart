@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/screens/favorites_screen/farorites_screen.dart';
@@ -17,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
   int _current_page = 0;
 
   void change_page(int page) {
-    print("change page $page");
     setState(() {
       _current_page = page;
     });
@@ -26,13 +27,13 @@ class _MainScreenState extends State<MainScreen> {
   Widget get_current_page() {
     switch (_current_page) {
       case 0: // home
-        return HomeScreen();
+        return const HomeScreen();
       case 1: // likes
-        return FavoritesScreen();
+        return const FavoritesScreen();
       case 2: // profile
-        return ProfileScreen();
+        return const ProfileScreen();
       default:
-        return HomeScreen();
+        return const HomeScreen();
     }
   }
 
@@ -49,14 +50,14 @@ class _MainScreenState extends State<MainScreen> {
           color: Color(0x00F5F5F5),
         ),
         child: userState.user!.uid == null
-            ? Center(
+            ? const Center(
                 child: CircularProgressIndicator.adaptive(),
               )
             : Column(
                 children: [
                   Expanded(
                     child: AnimatedContainer(
-                      duration: Duration(milliseconds: 150),
+                      duration: const Duration(milliseconds: 150),
                       child: get_current_page(),
                     ),
                   ),

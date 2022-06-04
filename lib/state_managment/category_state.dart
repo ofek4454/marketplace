@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:weave_marketplace/models/category_model.dart';
 import 'package:weave_marketplace/models/item_model.dart';
@@ -5,7 +7,7 @@ import 'package:weave_marketplace/models/item_model.dart';
 import '../dummy_data.dart';
 
 class CategoryState extends ChangeNotifier {
-  Category? _category;
+  final Category? _category;
   List<Item>? _items;
 
   CategoryState(this._category) {

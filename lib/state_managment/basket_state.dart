@@ -1,9 +1,11 @@
+// ignore_for_file: non_constant_identifier_names, avoid_function_literals_in_foreach_calls
+
 import 'package:flutter/material.dart';
 import 'package:weave_marketplace/models/basket_item.dart';
 import 'package:weave_marketplace/models/item_model.dart';
 
 class BasketState extends ChangeNotifier {
-  List<BasketItem>? _items;
+  final List<BasketItem>? _items;
 
   BasketState() : _items = [];
 
@@ -43,8 +45,9 @@ class BasketState extends ChangeNotifier {
 
   Future<void> decrease_quantity(Item item) async {
     int i = _items!.indexWhere((b_item) => b_item.item!.uid == item.uid);
-    if (_items![i].quantity! > 1)
+    if (_items![i].quantity! > 1) {
       _items![i].quantity = _items![i].quantity! - 1;
+    }
     notifyListeners();
   }
 

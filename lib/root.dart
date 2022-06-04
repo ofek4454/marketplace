@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/models/auth_model.dart';
@@ -17,6 +19,8 @@ enum AuthStatus {
 }
 
 class RootScreen extends StatefulWidget {
+  const RootScreen({Key? key}) : super(key: key);
+
   @override
   _RootScreenState createState() => _RootScreenState();
 }
@@ -63,9 +67,9 @@ class _RootScreenState extends State<RootScreen> {
           child: const MainScreen(),
         );
       case AuthStatus.Unknown:
-        return SplashScreen();
+        return const SplashScreen();
       default:
-        return SplashScreen();
+        return const SplashScreen();
     }
   }
 }

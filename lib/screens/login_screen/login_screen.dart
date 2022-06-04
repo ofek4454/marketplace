@@ -1,3 +1,5 @@
+// ignore_for_file: constant_identifier_names, non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:weave_marketplace/services/auth.dart';
 
@@ -42,12 +44,20 @@ class _LoginScreenState extends State<LoginScreen> {
               password: password_controller.text,
               name: name_controller.text,
             );
+      if (!res) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Something went wrong!'),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+      }
     } catch (e) {
       setState(() {
         loading = false;
       });
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('${e}'),
+        content: Text(e.toString()),
         backgroundColor: Theme.of(context).errorColor,
       ));
     }
@@ -106,10 +116,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   validator: (val) {
-                    if (val == null || val.isEmpty || val.length < 4)
+                    if (val == null || val.isEmpty || val.length < 4) {
                       return 'Enter password';
-                    else
+                    } else {
                       return null;
+                    }
                   },
                 ),
                 const SizedBox(height: 20),
@@ -127,15 +138,16 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     validator: (val) {
-                      if (val == null || val.isEmpty || val.length < 4)
+                      if (val == null || val.isEmpty || val.length < 4) {
                         return 'Enter name';
-                      else
+                      } else {
                         return null;
+                      }
                     },
                   ),
                 const SizedBox(height: 20),
                 loading
-                    ? Center(child: CircularProgressIndicator.adaptive())
+                    ? const Center(child: CircularProgressIndicator.adaptive())
                     : ElevatedButton(
                         style: ElevatedButton.styleFrom(primary: Colors.amber),
                         onPressed: () => _onTap(),

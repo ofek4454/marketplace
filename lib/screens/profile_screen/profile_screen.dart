@@ -6,13 +6,11 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-        child: TextButton(
-          child: Text('Log out'),
-          onPressed: () => Auth().signOut(),
-          style: TextButton.styleFrom(primary: Colors.red),
-        ),
+    return Center(
+      child: TextButton(
+        child: const Text('Log out'),
+        onPressed: () => Auth().signOut(),
+        style: TextButton.styleFrom(primary: Colors.red),
       ),
     );
   }

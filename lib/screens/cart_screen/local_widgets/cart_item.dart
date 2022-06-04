@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -6,7 +8,7 @@ import 'package:weave_marketplace/state_managment/basket_state.dart';
 
 class CartItem extends StatelessWidget {
   final BasketItem item;
-  const CartItem(@required this.item, {Key? key}) : super(key: key);
+  const CartItem(this.item, {Key? key}) : super(key: key);
 
   Widget _build_btn(IconData icon, Function action) {
     return Material(

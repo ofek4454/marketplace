@@ -1,3 +1,5 @@
+// ignore_for_file: must_be_immutable, non_constant_identifier_names
+
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -52,7 +54,7 @@ class _ImageUploaderState extends State<ImageUploader> {
                   border: Border.all(color: Colors.red)),
               child: IconButton(
                 color: Colors.red,
-                icon: Icon(Icons.cleaning_services_rounded),
+                icon: const Icon(Icons.cleaning_services_rounded),
                 onPressed: () => widget.clear_images!(),
                 splashColor: Colors.red,
               ),

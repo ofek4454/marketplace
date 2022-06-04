@@ -9,7 +9,7 @@ class OrderSummery extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    // final size = MediaQuery.of(context).size;
     final basketState = Provider.of<BasketState>(context);
 
     return Card(

@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/screens/category_screen/local_widgets/item_card.dart';
@@ -39,7 +41,7 @@ class CategoryScreen extends StatelessWidget {
                             ChangeNotifierProvider<ItemState>(
                           create: (context) =>
                               ItemState(categoryState.items![index]),
-                          child: SuggestedItemCard(),
+                          child: const SuggestedItemCard(),
                         ),
                       ),
                     ),
@@ -50,7 +52,7 @@ class CategoryScreen extends StatelessWidget {
                     ...categoryState.items!.map(
                       (item) => ChangeNotifierProvider<ItemState>(
                         create: (context) => ItemState(item),
-                        child: ItemCard(),
+                        child: const ItemCard(),
                       ),
                     ),
                   ],
@@ -64,7 +66,7 @@ class CategoryScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Text(
+          const Text(
             'Popular',
             style: TextStyle(
               fontFamily: 'Lato',
@@ -73,7 +75,7 @@ class CategoryScreen extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {},
-            child: Text(
+            child: const Text(
               'Show all',
               style: TextStyle(
                 fontWeight: FontWeight.w200,

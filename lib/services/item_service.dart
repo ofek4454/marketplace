@@ -1,8 +1,10 @@
+// ignore_for_file: unused_field, non_constant_identifier_names, avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:weave_marketplace/models/user_model.dart';
 
 class ItemService {
-  FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<String> upload_item(
     UserModel user,

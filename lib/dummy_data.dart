@@ -1,3 +1,5 @@
+// ignore_for_file: non_constant_identifier_names
+
 import 'package:weave_marketplace/models/item_model.dart';
 
 List<Item> DUMMY_DATA = [

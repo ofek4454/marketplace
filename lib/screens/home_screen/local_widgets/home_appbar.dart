@@ -10,8 +10,10 @@ import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class HomeAppbar extends StatelessWidget {
   final double? height;
+  final Function? openSearchBar;
 
-  const HomeAppbar({@required this.height, Key? key}) : super(key: key);
+  const HomeAppbar({@required this.height, this.openSearchBar, Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class HomeAppbar extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () => openSearchBar!(),
               icon: Icon(
                 Icons.search,
               ),

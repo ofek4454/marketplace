@@ -48,6 +48,28 @@ class CartScreen extends StatelessWidget {
                     ...basketState.items!.map((e) => CartItem(e)),
                     const SizedBox(height: 30),
                     const OrderSummery(),
+                    const SizedBox(height: 10),
+                    SizedBox(
+                      width: size.width * 0.85,
+                      height: 50,
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: const Text(
+                          'Checkout',
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            fontSize: 18,
+                            color: Colors.white,
+                          ),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.black,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
         ),

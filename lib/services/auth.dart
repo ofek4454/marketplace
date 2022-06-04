@@ -1,9 +1,11 @@
+// ignore_for_file: avoid_print
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:weave_marketplace/models/auth_model.dart';
 
 class Auth {
-  FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Stream<AuthModel?> get userAuth {
     return _auth.authStateChanges.call().map(
@@ -16,7 +18,7 @@ class Auth {
       {String? email, String? password, String? name}) async {
     bool retVal = false;
     try {
-      final UserCredential _credentials = await _auth
+      final UserCredential? _credentials = await _auth
           .createUserWithEmailAndPassword(email: email!, password: password!);
 
       if (_credentials != null) {
@@ -27,8 +29,8 @@ class Auth {
         }
       }
     } catch (e) {
-      print(e);
-      throw e;
+      // print(e);
+      rethrow;
     }
     return retVal;
   }
@@ -36,14 +38,13 @@ class Auth {
   Future<bool> logInUser({String? email, String? password}) async {
     bool retVal = false;
     try {
-      final UserCredential _credentials = await _auth
+      final UserCredential? _credentials = await _auth
           .signInWithEmailAndPassword(email: email!, password: password!);
       if (_credentials != null) {
         retVal = true;
       }
     } catch (e) {
-      print(e);
-      throw e;
+      rethrow;
     }
     return retVal;
   }
