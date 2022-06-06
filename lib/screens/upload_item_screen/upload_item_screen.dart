@@ -1,14 +1,17 @@
-// ignore_for_file: non_constant_identifier_names, avoid_function_literals_in_foreach_calls
+// ignore_for_file: non_constant_identifier_names, avoid_function_literals_in_foreach_calls, avoid_print
 
 import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'package:weave_marketplace/dummy_data.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/image_uploader.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/multiselect.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/progress_bar.dart';
+import 'package:weave_marketplace/services/item_service.dart';
+import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class UploadItemScreen extends StatefulWidget {
   const UploadItemScreen({Key? key}) : super(key: key);
@@ -23,11 +26,58 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
   List<File> images = [];
   Color? suffixColor;
   List<String> categories = [];
+  bool isLoading = false;
 
   final TextEditingController _categories_controller = TextEditingController();
   final TextEditingController _name_controller = TextEditingController();
-  final TextEditingController _decription_controller = TextEditingController();
+  final TextEditingController _description_controller = TextEditingController();
   final TextEditingController _price_controller = TextEditingController();
+
+  Future<void> _upload() async {
+    final validate = _formKey.currentState!.validate();
+    if (!validate) return;
+
+    try {
+      final userState = Provider.of<UserState>(context, listen: false);
+
+      setState(() {
+        isLoading = true;
+      });
+      await ItemService().upload_item(
+        user: userState.user,
+        name: _name_controller.text,
+        description: _description_controller.text,
+        price: double.tryParse(_price_controller.text),
+        category: categories,
+        images: images,
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Something went wrong!'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      print(e);
+      setState(() {
+        isLoading = false;
+      });
+      return;
+    }
+    setState(() {
+      isLoading = false;
+    });
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Product uploaded successfully!',
+          style: TextStyle(color: Colors.black),
+        ),
+        backgroundColor: Colors.amber,
+      ),
+    );
+    Navigator.of(context).pop();
+  }
 
   Future<void> get_images() async {
     final int last_selection = images.length;
@@ -70,33 +120,10 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     final String last_val = controller!.text;
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10),
-      child: TextFormField(
-        controller: controller,
-        maxLines: multiline! ? 10 : 1,
-        minLines: multiline ? 2 : 1,
-        decoration: InputDecoration(
-          focusedBorder: OutlineInputBorder(
-            borderSide: const BorderSide(
-              color: Colors.amber,
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          border: OutlineInputBorder(
-            borderSide: const BorderSide(
-              width: 2,
-            ),
-            borderRadius: BorderRadius.circular(20),
-          ),
-          labelText: label,
-          labelStyle: const TextStyle(
-            color: Colors.black,
-            fontFamily: 'Lato',
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        keyboardType: keyboard,
-        onFieldSubmitted: (val) {
+      child: Focus(
+        onFocusChange: (value) {
+          if (value) return;
+          final val = controller.text;
           if (val.isNotEmpty && last_val.isEmpty) {
             setState(() {
               progress = min(progress + 20, 100);
@@ -105,11 +132,38 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
             progress = max(progress - 20, 0);
           }
         },
-        validator: (val) {
-          if (validator != null) return validator(val);
-          if (val == null || val.isEmpty) return 'invalid input';
-          return null;
-        },
+        child: TextFormField(
+          controller: controller,
+          maxLines: multiline! ? 10 : 1,
+          minLines: multiline ? 2 : 1,
+          decoration: InputDecoration(
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(
+                color: Colors.amber,
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            border: OutlineInputBorder(
+              borderSide: const BorderSide(
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            labelText: label,
+            labelStyle: const TextStyle(
+              color: Colors.black,
+              fontFamily: 'Lato',
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          keyboardType: keyboard,
+          validator: (val) {
+            if (validator != null) return validator(val);
+            if (val == null || val.isEmpty) return 'invalid input';
+            return null;
+          },
+        ),
       ),
     );
   }
@@ -233,15 +287,17 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                         _build_input_box(
                           label: 'Description',
                           multiline: true,
-                          controller: _decription_controller,
+                          controller: _description_controller,
                         ),
                         _build_input_box(
                             label: 'Price',
                             keyboard: TextInputType.number,
                             controller: _price_controller,
                             validator: (String? val) {
-                              if (val == null || val.isEmpty) {
-                                return 'please select category';
+                              if (val == null ||
+                                  val.isEmpty ||
+                                  double.tryParse(val) == null) {
+                                return 'invalid input';
                               }
                               return null;
                             }),
@@ -256,15 +312,20 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                   width: size.width * 0.85,
                   height: 50,
                   child: ElevatedButton(
-                    onPressed: () {},
-                    child: const Text(
-                      'Upload',
-                      style: TextStyle(
-                        fontFamily: 'Lato',
-                        fontSize: 18,
-                        color: Colors.white,
-                      ),
-                    ),
+                    onPressed: isLoading ? null : () => _upload(),
+                    child: isLoading
+                        ? const CircularProgressIndicator.adaptive(
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.amber),
+                          )
+                        : const Text(
+                            'Upload',
+                            style: TextStyle(
+                              fontFamily: 'Lato',
+                              fontSize: 18,
+                              color: Colors.white,
+                            ),
+                          ),
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black,
                       shape: RoundedRectangleBorder(

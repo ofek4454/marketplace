@@ -36,6 +36,8 @@ dependencies:
   firebase_auth: ^3.3.19
   firebase_core: ^1.17.1
   cloud_firestore: ^3.1.17
+  firebase_storage: ^10.1.0
+
 
 dev_dependencies:
   flutter_lints: ^1.0.0

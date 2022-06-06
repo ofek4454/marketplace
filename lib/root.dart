@@ -9,7 +9,7 @@ import 'package:weave_marketplace/screens/main_screen.dart/main_screen.dart';
 import 'package:weave_marketplace/screens/splash_screen/slpash_screen.dart';
 import 'package:weave_marketplace/services/streams.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
-import 'package:weave_marketplace/state_managment/store_state.dart';
+import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
 
 enum AuthStatus {
@@ -57,8 +57,8 @@ class _RootScreenState extends State<RootScreen> {
               value: DBStreams().getCurrentUser(_auth.uid!),
               initialData: UserState(UserModel()),
             ),
-            ChangeNotifierProvider<StoreState>(
-              create: (context) => StoreState(),
+            ChangeNotifierProvider<MarketPlaceState>(
+              create: (context) => MarketPlaceState(),
             ),
             ChangeNotifierProvider<BasketState>(
               create: (context) => BasketState(),

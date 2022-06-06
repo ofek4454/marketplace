@@ -2,12 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:weave_marketplace/models/category_model.dart';
+import 'package:weave_marketplace/services/marketplace.dart';
 
-class StoreState extends ChangeNotifier {
+class MarketPlaceState extends ChangeNotifier {
   int? _current_category;
   List<Category>? _categories;
 
-  StoreState() : _current_category = 0 {
+  MarketPlaceState() : _current_category = 0 {
     _categories = null;
     _fetch_categories();
   }
@@ -20,7 +21,7 @@ class StoreState extends ChangeNotifier {
 
   Future<void> _fetch_categories() async {
     await Future.delayed(const Duration(seconds: 2));
-    List<String> categories = ['All', 'Shoes', 'Clothes', 'Watchs'];
+    List<String> categories = await MarketPlaceService().getCategories();
     _categories = [];
     categories.forEach((element) {
       _categories!.add(Category(name: element));

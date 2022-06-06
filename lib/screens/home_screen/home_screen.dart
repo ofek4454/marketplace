@@ -6,7 +6,7 @@ import 'package:weave_marketplace/models/category_model.dart';
 import 'package:weave_marketplace/screens/category_screen/category_screen.dart';
 import 'package:weave_marketplace/screens/home_screen/local_widgets/search_bar.dart';
 import 'package:weave_marketplace/state_managment/category_state.dart';
-import 'package:weave_marketplace/state_managment/store_state.dart';
+import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 import './local_widgets/home_appbar.dart';
 import 'local_widgets/category_chooser.dart';
 
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    final storeState = Provider.of<StoreState>(context);
+    final storeState = Provider.of<MarketPlaceState>(context);
 
     return Container(
       height: size.height,
@@ -113,7 +113,8 @@ class _HomeScreenState extends State<HomeScreen>
                 ),
                 CategoryChooser(),
                 Expanded(
-                  child: ChangeNotifierProxyProvider<StoreState, CategoryState>(
+                  child: ChangeNotifierProxyProvider<MarketPlaceState,
+                      CategoryState>(
                     create: (context) => CategoryState(Category(name: 'All')),
                     update: (context, store, category) =>
                         CategoryState(store.category),

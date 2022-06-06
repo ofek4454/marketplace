@@ -1,25 +1,29 @@
 // ignore_for_file: unused_field, non_constant_identifier_names, avoid_print
 
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:weave_marketplace/models/user_model.dart';
 
 class ItemService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
-  Future<String> upload_item(
-    UserModel user,
+  Future<String> upload_item({
+    UserModel? user,
     String? name,
     String? description,
     double? price,
-    String? category,
-  ) async {
+    List<String>? category,
+    List<File>? images,
+  }) async {
     String retVal = 'error';
-    final _firestore = FirebaseFirestore.instance;
     try {
-      await _firestore
+      final itemDoc = await _firestore
           .collection('communitys')
-          .doc(user.communityId)
-          .collection('store')
+          .doc(user!.communityId)
+          .collection('marketplace')
           .add({
         'name': name,
         'description': description,
@@ -28,9 +32,41 @@ class ItemService {
         'ownerId': user.uid,
         'createdAt': Timestamp.now(),
       });
+      await _upload_images(images, user.communityId, itemDoc.id);
       retVal = 'success';
     } catch (e) {
       print(e);
+      rethrow;
+    }
+    return retVal;
+  }
+
+  Future<String> _upload_images(
+    List<File>? images,
+    String? communityId,
+    String? itemId,
+  ) async {
+    String retVal = 'error';
+    final ref = storage.ref().child('shop').child(communityId!).child(itemId!);
+    try {
+      List<String> imagesUrl = [];
+      for (File image in images!) {
+        final res = await ref.child(image.path.split('/').last).putFile(image);
+        final url = await res.ref.getDownloadURL();
+        imagesUrl.add(url);
+      }
+      await _firestore
+          .collection('communitys')
+          .doc(communityId)
+          .collection('marketplace')
+          .doc(itemId)
+          .update(({
+            'images': imagesUrl,
+          }));
+      retVal = 'success';
+    } catch (e) {
+      print(e);
+      rethrow;
     }
     return retVal;
   }

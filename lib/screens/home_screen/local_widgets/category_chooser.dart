@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:weave_marketplace/state_managment/store_state.dart';
+import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 
 class CategoryChooser extends StatelessWidget {
   Widget _build_category_item(BuildContext context, int index) {
-    final storeState = Provider.of<StoreState>(context, listen: false);
+    final storeState = Provider.of<MarketPlaceState>(context, listen: false);
     bool current = index == storeState.current;
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -38,7 +38,7 @@ class CategoryChooser extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final storeState = Provider.of<StoreState>(context);
+    final storeState = Provider.of<MarketPlaceState>(context);
 
     Size size = MediaQuery.of(context).size;
     return SizedBox(
