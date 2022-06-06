@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 
 class ImageViewer extends StatefulWidget {
@@ -50,8 +51,7 @@ class _ImageViewerState extends State<ImageViewer> {
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color:
-                          current_image == index ? Colors.amber : Colors.grey,
+                      color: current_image == index ? MAIN_COLOR : Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(20)),
                 margin: const EdgeInsets.symmetric(horizontal: 5),

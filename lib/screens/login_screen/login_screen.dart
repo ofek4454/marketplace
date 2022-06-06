@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names, non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/services/auth.dart';
 
 enum CurrentState {
@@ -85,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: const Text('email'),
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.amber,
+                        color: MAIN_COLOR,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(20),
@@ -109,7 +110,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     label: const Text('password'),
                     border: OutlineInputBorder(
                       borderSide: const BorderSide(
-                        color: Colors.amber,
+                        color: MAIN_COLOR,
                         width: 2,
                       ),
                       borderRadius: BorderRadius.circular(20),
@@ -131,7 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       label: const Text('name'),
                       border: OutlineInputBorder(
                         borderSide: const BorderSide(
-                          color: Colors.amber,
+                          color: MAIN_COLOR,
                           width: 2,
                         ),
                         borderRadius: BorderRadius.circular(20),
@@ -149,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 loading
                     ? const Center(child: CircularProgressIndicator.adaptive())
                     : ElevatedButton(
-                        style: ElevatedButton.styleFrom(primary: Colors.amber),
+                        style: ElevatedButton.styleFrom(primary: MAIN_COLOR),
                         onPressed: () => _onTap(),
                         child: Text(state.name),
                       ),

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 
 class ProgressBar extends StatelessWidget {
   final double? progress;
@@ -17,16 +18,14 @@ class ProgressBar extends StatelessWidget {
       height: 20,
       alignment: Alignment.center,
       decoration: BoxDecoration(
-        color: Colors.amber,
+        color: MAIN_COLOR,
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         '${progress!.toInt()}%',
         textAlign: TextAlign.center,
         style: const TextStyle(
-          fontFamily: 'Lato',
-          fontSize: 15,
-        ),
+            fontFamily: 'Lato', fontSize: 15, color: Colors.white),
       ),
     );
   }

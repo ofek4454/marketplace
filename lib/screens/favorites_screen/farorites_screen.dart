@@ -3,6 +3,7 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 
@@ -38,7 +39,7 @@ class FavoritesScreen extends StatelessWidget {
                   ),
                 ),
                 Badge(
-                  badgeColor: Colors.amber,
+                  badgeColor: MAIN_COLOR,
                   padding: const EdgeInsets.all(7),
                   badgeContent: Text(
                     '${basketState.basket_quantity}',

@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/category_screen/local_widgets/item_card.dart';
 import 'package:weave_marketplace/screens/category_screen/local_widgets/suggested_item.dart';
 import 'package:weave_marketplace/state_managment/category_state.dart';
@@ -74,6 +75,10 @@ class CategoryScreen extends StatelessWidget {
             ),
           ),
           TextButton(
+            style: ButtonStyle(
+              overlayColor: MaterialStateColor.resolveWith(
+                  (states) => MAIN_COLOR.withAlpha(50)),
+            ),
             onPressed: () {},
             child: const Text(
               'Show all',

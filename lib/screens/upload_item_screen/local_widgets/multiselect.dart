@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 
 // Multi Select widget
 // This widget is reusable
@@ -47,8 +48,8 @@ class _MultiSelectState extends State<MultiSelect> {
               .map((item) => CheckboxListTile(
                     value: widget.selected.contains(item),
                     title: Text(item),
-                    checkColor: Colors.black,
-                    activeColor: Colors.amber,
+                    checkColor: Colors.white,
+                    activeColor: MAIN_COLOR,
                     controlAffinity: ListTileControlAffinity.leading,
                     onChanged: (isChecked) => _itemChange(item, isChecked!),
                   ))
@@ -67,12 +68,12 @@ class _MultiSelectState extends State<MultiSelect> {
           onPressed: _cancel,
         ),
         ElevatedButton(
-          style: ElevatedButton.styleFrom(primary: Colors.amber),
+          style: ElevatedButton.styleFrom(primary: MAIN_COLOR),
           child: const Text(
             'Submit',
             style: TextStyle(
               fontFamily: 'Lato',
-              color: Colors.black,
+              color: Colors.white,
             ),
           ),
           onPressed: _submit,

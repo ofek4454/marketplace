@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
@@ -53,7 +54,7 @@ class ItemCard extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () => itemState.toggle_favorite(),
-                          color: itemState.is_fav ? Colors.amber : Colors.grey,
+                          color: itemState.is_fav ? MAIN_COLOR : Colors.grey,
                           iconSize: 30,
                           icon: Icon(
                             itemState.is_fav
@@ -80,7 +81,7 @@ class ItemCard extends StatelessWidget {
                                 style: const TextStyle(
                                   fontFamily: 'Lato',
                                   fontSize: 18,
-                                  color: Colors.amber,
+                                  color: MAIN_COLOR,
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
@@ -106,7 +107,7 @@ class ItemCard extends StatelessWidget {
               bottom: 20,
               right: 20,
               child: IconButton(
-                color: Colors.amber,
+                color: MAIN_COLOR,
                 onPressed: () {
                   basketState.add_to_basket(itemState.item!);
                   HapticFeedback.heavyImpact();

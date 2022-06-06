@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/cart_screen/local_widgets/cart_item.dart';
 import 'package:weave_marketplace/screens/cart_screen/local_widgets/order_summery.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
@@ -63,7 +64,7 @@ class CartScreen extends StatelessWidget {
                           ),
                         ),
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.black,
+                          primary: MAIN_COLOR,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                           ),

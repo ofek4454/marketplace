@@ -3,6 +3,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 
 class ImageUploader extends StatefulWidget {
   final Function? get_image, clear_images;
@@ -39,6 +40,7 @@ class _ImageUploaderState extends State<ImageUploader> {
                 ? const Icon(
                     Icons.add_photo_alternate_outlined,
                     size: 30,
+                    color: MAIN_COLOR,
                   )
                 : ImageViewer(widget.images),
           ),
@@ -102,8 +104,7 @@ class _ImageViewerState extends State<ImageViewer> {
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                     border: Border.all(
-                      color:
-                          current_image == index ? Colors.amber : Colors.grey,
+                      color: current_image == index ? MAIN_COLOR : Colors.grey,
                     ),
                     borderRadius: BorderRadius.circular(20)),
                 margin: const EdgeInsets.symmetric(horizontal: 5),

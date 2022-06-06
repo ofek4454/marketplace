@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/models/basket_item.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 
@@ -14,6 +15,7 @@ class CartItem extends StatelessWidget {
     return Material(
       color: Colors.transparent,
       child: InkWell(
+        splashColor: MAIN_COLOR,
         customBorder: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10),
         ),
@@ -24,7 +26,7 @@ class CartItem extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(4),
           decoration: BoxDecoration(
-            border: Border.all(color: Colors.black54),
+            border: Border.all(color: MAIN_COLOR),
             borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
           child: Icon(
@@ -76,7 +78,7 @@ class CartItem extends StatelessWidget {
                     style: const TextStyle(
                       fontFamily: 'Lato',
                       fontSize: 18,
-                      color: Colors.amber,
+                      color: MAIN_COLOR,
                     ),
                     children: <TextSpan>[
                       TextSpan(
@@ -118,6 +120,7 @@ class CartItem extends StatelessWidget {
               ],
             ),
             IconButton(
+              splashColor: MAIN_COLOR,
               onPressed: () async {
                 HapticFeedback.mediumImpact();
                 bool? res = await showDialog<bool>(
@@ -127,19 +130,36 @@ class CartItem extends StatelessWidget {
                     content: const Text('This action canot be canceled'),
                     actions: [
                       TextButton(
+                        style: ButtonStyle(
+                          overlayColor: MaterialStateColor.resolveWith(
+                              (states) => MAIN_COLOR.withAlpha(100)),
+                        ),
+                        child: const Text(
+                          'Cancel',
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            color: Colors.black,
+                          ),
+                        ),
                         onPressed: () => Navigator.of(context).pop(false),
-                        child: const Text('Cancel'),
                       ),
-                      TextButton(
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(primary: MAIN_COLOR),
+                        child: const Text(
+                          'Remove',
+                          style: TextStyle(
+                            fontFamily: 'Lato',
+                            color: Colors.white,
+                          ),
+                        ),
                         onPressed: () => Navigator.of(context).pop(true),
-                        child: const Text('Remove'),
                       ),
                     ],
                   ),
                 );
                 if (res!) basketState.remove_from_busket(item.item!);
               },
-              color: Colors.amber,
+              color: MAIN_COLOR,
               icon: const Icon(
                 Icons.delete_outline_rounded,
               ),

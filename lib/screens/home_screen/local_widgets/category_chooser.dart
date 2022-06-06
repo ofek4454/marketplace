@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 
 class CategoryChooser extends StatelessWidget {
@@ -18,14 +19,14 @@ class CategoryChooser extends StatelessWidget {
             border: Border(
               bottom: BorderSide(
                 width: 2,
-                color: current ? Colors.amber : Colors.transparent,
+                color: current ? MAIN_COLOR : Colors.transparent,
               ),
             ),
           ),
           child: Text(
             storeState.categories![index].name!,
             style: TextStyle(
-              color: current ? Colors.amber : Colors.grey,
+              color: current ? MAIN_COLOR : Colors.grey,
               fontSize: 16,
               fontFamily: 'Lato',
               fontWeight: current ? FontWeight.bold : FontWeight.w200,

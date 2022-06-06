@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:weave_marketplace/screens/item_screen/local_widgets/image_viewer.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
@@ -34,7 +35,7 @@ class ItemScreen extends StatelessWidget {
                     ),
                     IconButton(
                       onPressed: () => itemState.toggle_favorite(),
-                      color: itemState.is_fav ? Colors.amber : Colors.grey,
+                      color: itemState.is_fav ? MAIN_COLOR : Colors.grey,
                       iconSize: 30,
                       icon: Icon(
                         itemState.is_fav
@@ -87,7 +88,7 @@ class ItemScreen extends StatelessWidget {
                               style: const TextStyle(
                                 fontFamily: 'Lato',
                                 fontSize: 18,
-                                color: Colors.amber,
+                                color: MAIN_COLOR,
                               ),
                               children: <TextSpan>[
                                 TextSpan(
@@ -170,7 +171,7 @@ class ItemScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  backgroundColor: Colors.amber,
+                  backgroundColor: MAIN_COLOR,
                   content: const Text(
                     'Go to cart',
                     style: TextStyle(

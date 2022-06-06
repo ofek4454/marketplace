@@ -3,14 +3,17 @@
 import 'dart:io';
 import 'dart:math';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/dummy_data.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/image_uploader.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/multiselect.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/progress_bar.dart';
 import 'package:weave_marketplace/services/item_service.dart';
+import 'package:weave_marketplace/services/marketplace.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class UploadItemScreen extends StatefulWidget {
@@ -71,9 +74,9 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
       const SnackBar(
         content: Text(
           'Product uploaded successfully!',
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.white),
         ),
-        backgroundColor: Colors.amber,
+        backgroundColor: MAIN_COLOR,
       ),
     );
     Navigator.of(context).pop();
@@ -139,7 +142,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(
-                color: Colors.amber,
+                color: MAIN_COLOR,
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(20),
@@ -157,6 +160,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
               fontWeight: FontWeight.w500,
             ),
           ),
+          cursorColor: MAIN_COLOR,
           keyboardType: keyboard,
           validator: (val) {
             if (validator != null) return validator(val);
@@ -172,7 +176,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     return Focus(
       onFocusChange: (hasFocus) {
         setState(() {
-          suffixColor = hasFocus ? Colors.amber : null;
+          suffixColor = hasFocus ? MAIN_COLOR : null;
         });
       },
       child: Container(
@@ -183,7 +187,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
           decoration: InputDecoration(
             focusedBorder: OutlineInputBorder(
               borderSide: const BorderSide(
-                color: Colors.amber,
+                color: MAIN_COLOR,
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(20),
@@ -250,94 +254,141 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     }
   }
 
+  Future<int?> _getCommunityItemsCount(String communityId) async {
+    final _firestore = FirebaseFirestore.instance;
+    final doc = await _firestore
+        .collection('communitys')
+        .doc(communityId)
+        .collection('marketplace')
+        .get();
+    return doc.size;
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+    final userState = Provider.of<UserState>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
-        body: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
-          child: Container(
-            width: size.height,
-            height: size.height,
-            color: const Color(0x0F5F5F50),
-            padding: const EdgeInsets.all(15),
-            child: Column(
-              children: [
-                Form(
-                  key: _formKey,
-                  child: Expanded(
-                    child: ListView(
-                      children: [
-                        Row(
-                          children: const [BackButton(color: Colors.black)],
-                        ),
-                        const SizedBox(height: 10),
-                        ImageUploader(
-                          images: images,
-                          get_image: get_images,
-                          clear_images: clear_images,
-                        ),
-                        const SizedBox(height: 10),
-                        _build_input_box(
-                          label: 'Product name',
-                          controller: _name_controller,
-                        ),
-                        _build_input_box(
-                          label: 'Description',
-                          multiline: true,
-                          controller: _description_controller,
-                        ),
-                        _build_input_box(
-                            label: 'Price',
-                            keyboard: TextInputType.number,
-                            controller: _price_controller,
-                            validator: (String? val) {
-                              if (val == null ||
-                                  val.isEmpty ||
-                                  double.tryParse(val) == null) {
-                                return 'invalid input';
-                              }
-                              return null;
-                            }),
-                        _build_category_picker(),
-                      ],
+        body: FutureBuilder<int?>(
+            future: _getCommunityItemsCount(userState.user!.communityId!),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState != ConnectionState.done) {
+                return const Center(
+                  child: CircularProgressIndicator.adaptive(),
+                );
+              }
+
+              if (snapshot.data == null) {
+                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('Something went wrong!'),
+                      backgroundColor: Theme.of(context).errorColor,
                     ),
-                  ),
-                ),
-                ProgressBar(progress: progress),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: size.width * 0.85,
-                  height: 50,
-                  child: ElevatedButton(
-                    onPressed: isLoading ? null : () => _upload(),
-                    child: isLoading
-                        ? const CircularProgressIndicator.adaptive(
-                            valueColor:
-                                AlwaysStoppedAnimation<Color>(Colors.amber),
-                          )
-                        : const Text(
-                            'Upload',
-                            style: TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 18,
-                              color: Colors.white,
+                  );
+                  Navigator.of(context).pop();
+                });
+              }
+
+              if (snapshot.data! > 50) {
+                WidgetsBinding.instance!.addPostFrameCallback((_) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: const Text('maximun products to upload is 50!'),
+                      backgroundColor: Theme.of(context).errorColor,
+                    ),
+                  );
+                  Navigator.of(context).pop();
+                });
+              }
+
+              return GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: Container(
+                  width: size.height,
+                  height: size.height,
+                  color: const Color(0x0F5F5F50),
+                  padding: const EdgeInsets.all(15),
+                  child: Column(
+                    children: [
+                      Form(
+                        key: _formKey,
+                        child: Expanded(
+                          child: ListView(
+                            children: [
+                              Row(
+                                children: const [
+                                  BackButton(color: Colors.black)
+                                ],
+                              ),
+                              const SizedBox(height: 10),
+                              ImageUploader(
+                                images: images,
+                                get_image: get_images,
+                                clear_images: clear_images,
+                              ),
+                              const SizedBox(height: 10),
+                              _build_input_box(
+                                label: 'Product name',
+                                controller: _name_controller,
+                              ),
+                              _build_input_box(
+                                label: 'Description',
+                                multiline: true,
+                                controller: _description_controller,
+                              ),
+                              _build_input_box(
+                                  label: 'Price',
+                                  keyboard: TextInputType.number,
+                                  controller: _price_controller,
+                                  validator: (String? val) {
+                                    if (val == null ||
+                                        val.isEmpty ||
+                                        double.tryParse(val) == null) {
+                                      return 'invalid input';
+                                    }
+                                    return null;
+                                  }),
+                              _build_category_picker(),
+                            ],
+                          ),
+                        ),
+                      ),
+                      ProgressBar(progress: progress),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        width: size.width * 0.85,
+                        height: 50,
+                        child: ElevatedButton(
+                          onPressed: isLoading ? null : () => _upload(),
+                          child: isLoading
+                              ? const CircularProgressIndicator.adaptive(
+                                  valueColor:
+                                      AlwaysStoppedAnimation<Color>(MAIN_COLOR),
+                                )
+                              : const Text(
+                                  'Upload',
+                                  style: TextStyle(
+                                    fontFamily: 'Lato',
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                          style: ElevatedButton.styleFrom(
+                            primary: MAIN_COLOR,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
                             ),
                           ),
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.black,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ),
-              ],
-            ),
-          ),
-        ),
+              );
+            }),
       ),
     );
   }

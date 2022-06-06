@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 
 class SearchBar extends StatefulWidget {
   const SearchBar({Key? key}) : super(key: key);
@@ -15,7 +16,7 @@ class _SearchBarState extends State<SearchBar> {
     return Focus(
       onFocusChange: (hasFocus) {
         setState(() {
-          suffixColor = hasFocus ? Colors.amber : null;
+          suffixColor = hasFocus ? MAIN_COLOR : null;
         });
       },
       child: TextField(
@@ -26,7 +27,7 @@ class _SearchBarState extends State<SearchBar> {
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(
             borderSide: const BorderSide(
-              color: Colors.amber,
+              color: MAIN_COLOR,
               width: 2,
             ),
             borderRadius: BorderRadius.circular(20),
@@ -42,6 +43,7 @@ class _SearchBarState extends State<SearchBar> {
             color: suffixColor,
           ),
         ),
+        cursorColor: MAIN_COLOR,
       ),
     );
   }

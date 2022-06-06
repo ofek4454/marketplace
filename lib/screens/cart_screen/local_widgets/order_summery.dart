@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 
 class OrderSummery extends StatelessWidget {
@@ -61,7 +62,7 @@ class OrderSummery extends StatelessWidget {
                       style: const TextStyle(
                         fontFamily: 'Lato',
                         fontSize: 18,
-                        color: Colors.amber,
+                        color: MAIN_COLOR,
                       ),
                       children: <TextSpan>[
                         TextSpan(
@@ -99,7 +100,7 @@ class OrderSummery extends StatelessWidget {
                       style: const TextStyle(
                         fontFamily: 'Lato',
                         fontSize: 18,
-                        color: Colors.amber,
+                        color: MAIN_COLOR,
                       ),
                       children: <TextSpan>[
                         TextSpan(

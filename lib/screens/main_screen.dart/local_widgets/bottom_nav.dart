@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 import 'package:flutter/material.dart';
+import 'package:weave_marketplace/colors.dart';
 
 class BottomNav extends StatelessWidget {
   final int? current_page;
@@ -25,11 +26,11 @@ class BottomNav extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(10),
               ),
-              color: current_page == index ? Colors.black : Colors.transparent,
+              color: current_page == index ? MAIN_COLOR : Colors.transparent,
             ),
             child: Icon(
               icon,
-              color: current_page == index ? Colors.white : null,
+              color: current_page == index ? Colors.white : MAIN_COLOR,
             ),
           ),
         ),

@@ -20,7 +20,6 @@ class MarketPlaceState extends ChangeNotifier {
   bool get hasData => _categories != null;
 
   Future<void> _fetch_categories() async {
-    await Future.delayed(const Duration(seconds: 2));
     List<String> categories = await MarketPlaceService().getCategories();
     _categories = [];
     categories.forEach((element) {
