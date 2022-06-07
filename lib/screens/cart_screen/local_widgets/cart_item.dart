@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/models/basket_item.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
+import 'package:weave_marketplace/widgets/image_from_network.dart';
 
 class CartItem extends StatelessWidget {
   final BasketItem item;
@@ -54,10 +55,9 @@ class CartItem extends StatelessWidget {
           ClipRRect(
             borderRadius:
                 const BorderRadius.horizontal(left: Radius.circular(20)),
-            child: Image.network(
+            child: ImageFromNetwork(
               item.item!.images!.first,
               height: double.infinity,
-              fit: BoxFit.cover,
               width: size.width * 0.25,
             ),
           ),

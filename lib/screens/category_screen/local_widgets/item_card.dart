@@ -6,6 +6,7 @@ import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
+import 'package:weave_marketplace/widgets/image_from_network.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({Key? key}) : super(key: key);
@@ -53,9 +54,8 @@ class ItemCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: const BorderRadius.horizontal(
                             left: Radius.circular(20)),
-                        child: Image.network(
+                        child: ImageFromNetwork(
                           itemState.item!.images!.first,
-                          fit: BoxFit.cover,
                           width: size.width * 0.3,
                           height: double.infinity,
                         ),

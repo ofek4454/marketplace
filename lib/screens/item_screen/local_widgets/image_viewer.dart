@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
+import 'package:weave_marketplace/widgets/image_from_network.dart';
 
 class ImageViewer extends StatefulWidget {
   final String? heroTag;
@@ -65,7 +66,7 @@ class _ImageViewerState extends State<ImageViewer> {
                   child: Padding(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Image.network(
+                    child: ImageFromNetwork(
                       itemState.item!.images!.first,
                     ),
                   ),

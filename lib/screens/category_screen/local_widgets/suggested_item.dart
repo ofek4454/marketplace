@@ -6,6 +6,7 @@ import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
+import 'package:weave_marketplace/widgets/image_from_network.dart';
 
 class SuggestedItemCard extends StatelessWidget {
   const SuggestedItemCard({Key? key}) : super(key: key);
@@ -48,9 +49,8 @@ class SuggestedItemCard extends StatelessWidget {
                       child: ClipRRect(
                         borderRadius: const BorderRadius.vertical(
                             top: Radius.circular(20)),
-                        child: Image.network(
+                        child: ImageFromNetwork(
                           itemState.item!.images!.first,
-                          fit: BoxFit.cover,
                           width: double.infinity,
                           height: size.height * 0.27,
                         ),
