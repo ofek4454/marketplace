@@ -36,8 +36,10 @@ class _ImageViewerState extends State<ImageViewer> {
         children: [
           Hero(
             tag: widget.heroTag!,
-            child: Image.asset(
-              itemState.item!.images![current_image],
+            child: Image(
+              image: NetworkImage(
+                itemState.item!.images!.first,
+              ),
               height: size.height * 0.25,
             ),
           ),
@@ -61,9 +63,10 @@ class _ImageViewerState extends State<ImageViewer> {
                   ),
                   onTap: () => setState(() => current_image = index),
                   child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Image.asset(
-                      itemState.item!.images![index],
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    child: Image.network(
+                      itemState.item!.images!.first,
                     ),
                   ),
                 ),

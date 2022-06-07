@@ -1,14 +1,18 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:weave_marketplace/colors.dart';
 
 class SearchBar extends StatefulWidget {
-  const SearchBar({Key? key}) : super(key: key);
+  Function? search;
+  SearchBar(this.search, {Key? key}) : super(key: key);
 
   @override
   State<SearchBar> createState() => _SearchBarState();
 }
 
 class _SearchBarState extends State<SearchBar> {
+  final TextEditingController _controller = TextEditingController();
   Color? suffixColor;
 
   @override
@@ -20,9 +24,10 @@ class _SearchBarState extends State<SearchBar> {
         });
       },
       child: TextField(
+        controller: _controller,
         onEditingComplete: () {
           FocusScope.of(context).unfocus();
-          // TODO: search
+          widget.search!(_controller.text);
         },
         decoration: InputDecoration(
           focusedBorder: OutlineInputBorder(

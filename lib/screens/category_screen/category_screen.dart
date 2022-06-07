@@ -3,21 +3,28 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
+import 'package:weave_marketplace/models/item_model.dart';
 import 'package:weave_marketplace/screens/category_screen/local_widgets/item_card.dart';
 import 'package:weave_marketplace/screens/category_screen/local_widgets/suggested_item.dart';
 import 'package:weave_marketplace/state_managment/category_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
 
 class CategoryScreen extends StatelessWidget {
-  const CategoryScreen({Key? key}) : super(key: key);
+  final String? searchKey;
+  const CategoryScreen(this.searchKey, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final categoryState = Provider.of<CategoryState>(context);
     final size = MediaQuery.of(context).size;
-    return !categoryState.hasData
+
+    List<Item>? items = searchKey == null
+        ? categoryState.items
+        : categoryState.search(searchKey!);
+
+    return !categoryState.hasData || categoryState.isLoading
         ? const Center(child: CircularProgressIndicator.adaptive())
-        : categoryState.items!.isEmpty
+        : items!.isEmpty
             ? Center(
                 child: Text(
                   'No items in category yet',
@@ -37,11 +44,12 @@ class CategoryScreen extends StatelessWidget {
                       child: ListView.builder(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         scrollDirection: Axis.horizontal,
-                        itemCount: categoryState.items!.length,
+                        itemCount: items.length,
                         itemBuilder: (context, index) =>
                             ChangeNotifierProvider<ItemState>(
-                          create: (context) =>
-                              ItemState(categoryState.items![index]),
+                          create: (context) => ItemState(
+                            items[index],
+                          ),
                           child: const SuggestedItemCard(),
                         ),
                       ),
@@ -50,7 +58,7 @@ class CategoryScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     _build_popular(),
                     // all products
-                    ...categoryState.items!.map(
+                    ...items.map(
                       (item) => ChangeNotifierProvider<ItemState>(
                         create: (context) => ItemState(item),
                         child: const ItemCard(),

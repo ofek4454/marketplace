@@ -1,13 +1,14 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 class Item {
   String? uid;
   String? name;
   String? description;
-  String? category;
+  List<String>? category;
   List<String>? images;
   double? price;
-  bool? isLiked;
   String? ownerId;
-  String? comunnityId;
+  Timestamp? createdAt;
 
   Item({
     this.uid,
@@ -16,8 +17,18 @@ class Item {
     this.category,
     this.images,
     this.price,
-    this.isLiked,
     this.ownerId,
-    this.comunnityId,
+    this.createdAt,
   });
+
+  Item.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
+    uid = doc.id;
+    name = doc['name'];
+    description = doc['description'];
+    price = doc['price'];
+    category = List<String>.from(doc['category']);
+    ownerId = doc['ownerId'];
+    createdAt = doc['createdAt'];
+    images = List<String>.from(doc['images']);
+  }
 }

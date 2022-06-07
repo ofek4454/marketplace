@@ -8,12 +8,11 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
-import 'package:weave_marketplace/dummy_data.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/image_uploader.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/multiselect.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/local_widgets/progress_bar.dart';
 import 'package:weave_marketplace/services/item_service.dart';
-import 'package:weave_marketplace/services/marketplace.dart';
+import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class UploadItemScreen extends StatefulWidget {
@@ -30,11 +29,27 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
   Color? suffixColor;
   List<String> categories = [];
   bool isLoading = false;
+  bool firstInit = true;
+  int? itemsCount;
 
   final TextEditingController _categories_controller = TextEditingController();
   final TextEditingController _name_controller = TextEditingController();
   final TextEditingController _description_controller = TextEditingController();
   final TextEditingController _price_controller = TextEditingController();
+
+  @override
+  void didChangeDependencies() async {
+    if (firstInit) {
+      final userState = Provider.of<UserState>(context, listen: false);
+
+      itemsCount = await _getCommunityItemsCount(userState.user!.communityId!);
+      setState(() {
+        firstInit = false;
+      });
+      checkIfCanUpload();
+    }
+    super.didChangeDependencies();
+  }
 
   Future<void> _upload() async {
     final validate = _formKey.currentState!.validate();
@@ -223,7 +238,9 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     final String last_selection = _categories_controller.text;
     // a list of selectable items
     // these items can be hard-coded or dynamically fetched from a database/API
-    final List<String> _items = CATEGORIES;
+    final marketState = Provider.of<MarketPlaceState>(context, listen: false);
+    final List<String> _items =
+        marketState.categories!.map<String>((e) => e.name!).toList();
 
     final List<String>? results = await showDialog(
       context: context,
@@ -256,55 +273,59 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
 
   Future<int?> _getCommunityItemsCount(String communityId) async {
     final _firestore = FirebaseFirestore.instance;
-    final doc = await _firestore
-        .collection('communitys')
-        .doc(communityId)
-        .collection('marketplace')
-        .get();
-    return doc.size;
+    int? retVal = -1;
+    try {
+      final doc = await _firestore
+          .collection('communitys')
+          .doc(communityId)
+          .collection('marketplace')
+          .get();
+      retVal = doc.size;
+    } catch (e) {
+      print(e);
+    }
+
+    return retVal;
+  }
+
+  void checkIfCanUpload() {
+    if (itemsCount == -1) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Something went wrong!'),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+        Navigator.of(context).pop();
+      });
+    }
+
+    if (itemsCount! > 50) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('maximun products to upload is 50!'),
+            backgroundColor: Theme.of(context).errorColor,
+          ),
+        );
+        Navigator.of(context).pop();
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final userState = Provider.of<UserState>(context, listen: false);
+    // final userState = Provider.of<UserState>(context, listen: false);
 
     return SafeArea(
       child: Scaffold(
-        body: FutureBuilder<int?>(
-            future: _getCommunityItemsCount(userState.user!.communityId!),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(
-                  child: CircularProgressIndicator.adaptive(),
-                );
-              }
-
-              if (snapshot.data == null) {
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('Something went wrong!'),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                });
-              }
-
-              if (snapshot.data! > 50) {
-                WidgetsBinding.instance!.addPostFrameCallback((_) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: const Text('maximun products to upload is 50!'),
-                      backgroundColor: Theme.of(context).errorColor,
-                    ),
-                  );
-                  Navigator.of(context).pop();
-                });
-              }
-
-              return GestureDetector(
+        body: itemsCount == null
+            ? const Center(
+                child: CircularProgressIndicator.adaptive(),
+              )
+            : GestureDetector(
                 onTap: () => FocusScope.of(context).unfocus(),
                 child: Container(
                   width: size.height,
@@ -387,8 +408,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                     ],
                   ),
                 ),
-              );
-            }),
+              ),
       ),
     );
   }

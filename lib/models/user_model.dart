@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:weave_marketplace/models/item_model.dart';
 
 class UserModel {
   String? uid;
   String? name;
   String? email;
   String? communityId;
-  List<Item>? favorites;
+  List<String>? favorites;
   Timestamp? createdAt;
 
   UserModel({
@@ -24,5 +23,7 @@ class UserModel {
     email = doc['email'];
     createdAt = doc['createdAt'];
     communityId = doc['communityId'];
+    favorites =
+        doc['favorites'] != null ? List<String>.from(doc['favorites']) : [];
   }
 }

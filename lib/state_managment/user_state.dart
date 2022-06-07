@@ -7,4 +7,6 @@ class UserState extends ChangeNotifier {
   UserState(this._user);
 
   UserModel? get user => _user;
+
+  bool isItemFav(String itemId) => _user!.favorites!.contains(itemId);
 }

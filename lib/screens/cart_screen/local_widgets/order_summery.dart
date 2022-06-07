@@ -104,7 +104,7 @@ class OrderSummery extends StatelessWidget {
                       ),
                       children: <TextSpan>[
                         TextSpan(
-                          text: '${basketState.basket_price}',
+                          text: basketState.basket_price.toStringAsFixed(2),
                           style: const TextStyle(
                               fontFamily: 'Lato',
                               fontSize: 24,

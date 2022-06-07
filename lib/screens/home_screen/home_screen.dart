@@ -23,6 +23,7 @@ class _HomeScreenState extends State<HomeScreen>
   AnimationController? _animationController;
   Animation<double>? _fadeAnimation;
   Animation<Offset>? _slideAnimation;
+  String? searchKey;
 
   @override
   void initState() {
@@ -46,15 +47,24 @@ class _HomeScreenState extends State<HomeScreen>
   void _open_search_bar() {
     if (!isSearchOpen) {
       setState(() {
+        searchKey = null;
         isSearchOpen = true;
       });
       _animationController!.forward();
     } else {
       setState(() {
+        searchKey = null;
+
         isSearchOpen = false;
       });
       _animationController!.reverse();
     }
+  }
+
+  void search(String key) {
+    setState(() {
+      searchKey = key;
+    });
   }
 
   @override
@@ -95,7 +105,15 @@ class _HomeScreenState extends State<HomeScreen>
                       child: Container(
                         margin:
                             EdgeInsets.only(left: 20, right: 20, bottom: 15),
-                        child: SearchBar(),
+                        child: isSearchOpen
+                            ? SearchBar(
+                                search,
+                                key: ValueKey('open'),
+                              )
+                            : SearchBar(
+                                search,
+                                key: ValueKey('close'),
+                              ),
                       ),
                     ),
                   ),
@@ -118,7 +136,7 @@ class _HomeScreenState extends State<HomeScreen>
                     create: (context) => CategoryState(Category(name: 'All')),
                     update: (context, store, category) =>
                         CategoryState(store.category),
-                    child: CategoryScreen(),
+                    child: CategoryScreen(searchKey),
                   ),
                 ),
               ],

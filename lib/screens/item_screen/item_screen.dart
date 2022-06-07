@@ -6,6 +6,7 @@ import 'package:weave_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:weave_marketplace/screens/item_screen/local_widgets/image_viewer.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
+import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class ItemScreen extends StatelessWidget {
   final String? heroTag;
@@ -16,6 +17,15 @@ class ItemScreen extends StatelessWidget {
     final size = MediaQuery.of(context).size;
 
     final itemState = Provider.of<ItemState>(context);
+    final userState = Provider.of<UserState>(context);
+
+    String categoryText = '';
+    for (var category in itemState.item!.category!) {
+      categoryText += '$category , ';
+    }
+    if (itemState.item!.category!.isNotEmpty) {
+      categoryText = categoryText.substring(0, categoryText.length - 2);
+    }
 
     return SafeArea(
       child: Scaffold(
@@ -34,11 +44,14 @@ class ItemScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                     IconButton(
-                      onPressed: () => itemState.toggle_favorite(),
-                      color: itemState.is_fav ? MAIN_COLOR : Colors.grey,
+                      onPressed: () => itemState.toggle_favorite(
+                          userState.user!.uid!, userState.user!.favorites!),
+                      color: userState.isItemFav(itemState.item!.uid!)
+                          ? MAIN_COLOR
+                          : Colors.grey,
                       iconSize: 30,
                       icon: Icon(
-                        itemState.is_fav
+                        userState.isItemFav(itemState.item!.uid!)
                             ? Icons.favorite
                             : Icons.favorite_border,
                       ),
@@ -56,7 +69,7 @@ class ItemScreen extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            itemState.item!.category!,
+                            categoryText,
                             style: const TextStyle(
                                 fontFamily: 'Lato',
                                 fontSize: 16,
@@ -160,7 +173,7 @@ class ItemScreen extends StatelessWidget {
                 SnackBar(
                   action: SnackBarAction(
                     label: 'View',
-                    textColor: Colors.black,
+                    textColor: Colors.white,
                     onPressed: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) =>
@@ -177,7 +190,7 @@ class ItemScreen extends StatelessWidget {
                     style: TextStyle(
                       fontFamily: 'Lato',
                       fontSize: 18,
-                      color: Colors.black,
+                      color: Colors.white,
                     ),
                   ),
                 ),

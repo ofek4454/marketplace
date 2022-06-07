@@ -5,6 +5,7 @@ import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
+import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class SuggestedItemCard extends StatelessWidget {
   const SuggestedItemCard({Key? key}) : super(key: key);
@@ -14,12 +15,17 @@ class SuggestedItemCard extends StatelessWidget {
     final size = MediaQuery.of(context).size;
     final itemState = Provider.of<ItemState>(context);
     final basketState = Provider.of<BasketState>(context, listen: false);
+    final userState = Provider.of<UserState>(context);
 
     return GestureDetector(
       onTap: () => Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => ChangeNotifierProvider<ItemState>.value(
-            value: itemState,
+          builder: (context) => MultiProvider(
+            providers: [
+              ChangeNotifierProvider<ItemState>.value(value: itemState),
+              ChangeNotifierProvider<UserState>.value(value: userState),
+              ChangeNotifierProvider<BasketState>.value(value: basketState),
+            ],
             child: ItemScreen(heroTag: '${itemState.item!.uid}suggested'),
           ),
         ),
@@ -30,8 +36,8 @@ class SuggestedItemCard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
-        child: Container(
-          padding: const EdgeInsets.all(10),
+        child: SizedBox(
+          //padding: const EdgeInsets.all(10),
           width: size.width * 0.6,
           child: Stack(
             alignment: Alignment.center,
@@ -39,54 +45,73 @@ class SuggestedItemCard extends StatelessWidget {
             children: [
               Column(
                 // mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
-                    tag: '${itemState.item!.uid}suggested',
-                    child: Image.asset(
-                      itemState.item!.images![0],
-                    ),
-                  ),
-                  Text(
-                    itemState.item!.name!,
-                    style: const TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: 18,
-                      fontWeight: FontWeight.w300,
-                    ),
-                  ),
-                  RichText(
-                    text: TextSpan(
-                      text: '\$ ',
+                      tag: '${itemState.item!.uid}suggested',
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.vertical(
+                            top: Radius.circular(20)),
+                        child: Image.network(
+                          itemState.item!.images!.first,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                          height: size.height * 0.27,
+                        ),
+                      )),
+                  const Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      itemState.item!.name!,
                       style: const TextStyle(
                         fontFamily: 'Lato',
                         fontSize: 18,
-                        color: MAIN_COLOR,
+                        fontWeight: FontWeight.w300,
                       ),
-                      children: <TextSpan>[
-                        TextSpan(
-                          text: '${itemState.item!.price}',
-                          style: const TextStyle(
-                              fontFamily: 'Lato',
-                              fontSize: 24,
-                              color: Colors.black,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: RichText(
+                      text: TextSpan(
+                        text: '\$ ',
+                        style: const TextStyle(
+                          fontFamily: 'Lato',
+                          fontSize: 18,
+                          color: MAIN_COLOR,
+                        ),
+                        children: <TextSpan>[
+                          TextSpan(
+                            text: '${itemState.item!.price}',
+                            style: const TextStyle(
+                                fontFamily: 'Lato',
+                                fontSize: 24,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Spacer(),
                 ],
               ),
               Positioned(
                 top: 10,
                 left: 10,
                 child: IconButton(
-                  onPressed: () => itemState.toggle_favorite(),
-                  color: itemState.is_fav ? MAIN_COLOR : Colors.grey,
+                  onPressed: () => itemState.toggle_favorite(
+                      userState.user!.uid!, userState.user!.favorites!),
+                  color: userState.isItemFav(itemState.item!.uid!)
+                      ? MAIN_COLOR
+                      : Colors.grey,
                   iconSize: 30,
                   icon: Icon(
-                    itemState.is_fav ? Icons.favorite : Icons.favorite_border,
+                    userState.isItemFav(itemState.item!.uid!)
+                        ? Icons.favorite
+                        : Icons.favorite_border,
                   ),
                 ),
               ),

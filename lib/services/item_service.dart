@@ -4,11 +4,34 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:weave_marketplace/models/item_model.dart';
 import 'package:weave_marketplace/models/user_model.dart';
 
 class ItemService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;
+
+  Future<List<Item>> getItems(String category) async {
+    List<Item> items = [];
+
+    try {
+      final communitys = await _firestore.collection('communitys').get();
+      for (var community in communitys.docs) {
+        final allItems = community.reference.collection('marketplace');
+        final categoryItems = category == 'All'
+            ? await allItems.get()
+            : await allItems.where('category', arrayContains: category).get();
+        for (var item in categoryItems.docs) {
+          items.add(Item.fromDocumentSnapshot(item));
+        }
+      }
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+
+    return items;
+  }
 
   Future<String> upload_item({
     UserModel? user,
@@ -63,6 +86,27 @@ class ItemService {
           .update(({
             'images': imagesUrl,
           }));
+      retVal = 'success';
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+    return retVal;
+  }
+
+  Future<String> toggleFavorite(
+      String? uid, String? itemId, List<String> favorites) async {
+    String retVal = 'error';
+    try {
+      favorites.contains(itemId)
+          ? favorites.remove(itemId)
+          : favorites.add(itemId!);
+
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .update({'favorites': favorites});
+
       retVal = 'success';
     } catch (e) {
       print(e);

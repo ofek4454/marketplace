@@ -5,6 +5,7 @@ import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/item_screen/item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
 import 'package:weave_marketplace/state_managment/item_state.dart';
+import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class ItemCard extends StatelessWidget {
   const ItemCard({Key? key}) : super(key: key);
@@ -13,6 +14,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final itemState = Provider.of<ItemState>(context);
     final basketState = Provider.of<BasketState>(context, listen: false);
+    final userState = Provider.of<UserState>(context);
 
     final size = MediaQuery.of(context).size;
 
@@ -21,9 +23,13 @@ class ItemCard extends StatelessWidget {
       child: GestureDetector(
         onTap: () => Navigator.of(context).push(
           MaterialPageRoute(
-            builder: (context) => ChangeNotifierProvider<ItemState>.value(
-              value: itemState,
-              child: ItemScreen(heroTag: '${itemState.item!.uid}'),
+            builder: (context) => MultiProvider(
+              providers: [
+                ChangeNotifierProvider<ItemState>.value(value: itemState),
+                ChangeNotifierProvider<UserState>.value(value: userState),
+                ChangeNotifierProvider<BasketState>.value(value: basketState),
+              ],
+              child: ItemScreen(heroTag: '${itemState.item!.uid}suggested'),
             ),
           ),
         ),
@@ -35,71 +41,89 @@ class ItemCard extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(20),
               ),
-              child: Container(
+              child: SizedBox(
                 width: double.infinity,
-                padding: const EdgeInsets.only(
-                    left: 10, right: 20, top: 10, bottom: 10),
+                // padding: const EdgeInsets.only(
+                //     left: 10, right: 20, top: 10, bottom: 10),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Hero(
                       tag: '${itemState.item!.uid}',
-                      child: Image.asset(
-                        itemState.item!.images!.last,
-                        //height: size.width * 0.3,
+                      child: ClipRRect(
+                        borderRadius: const BorderRadius.horizontal(
+                            left: Radius.circular(20)),
+                        child: Image.network(
+                          itemState.item!.images!.first,
+                          fit: BoxFit.cover,
+                          //width: double.infinity,
+                          height: double.infinity,
+                        ),
                       ),
                     ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        IconButton(
-                          onPressed: () => itemState.toggle_favorite(),
-                          color: itemState.is_fav ? MAIN_COLOR : Colors.grey,
-                          iconSize: 30,
-                          icon: Icon(
-                            itemState.is_fav
-                                ? Icons.favorite
-                                : Icons.favorite_border,
-                          ),
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              itemState.item!.name!,
-                              style: const TextStyle(
-                                fontFamily: 'Lato',
-                                fontSize: 18,
-                                fontWeight: FontWeight.w300,
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            RichText(
-                              textAlign: TextAlign.start,
-                              text: TextSpan(
-                                text: '\$ ',
+                    Padding(
+                      padding:
+                          const EdgeInsets.only(left: 20, top: 10, bottom: 10),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                itemState.item!.name!,
                                 style: const TextStyle(
                                   fontFamily: 'Lato',
                                   fontSize: 18,
-                                  color: MAIN_COLOR,
+                                  fontWeight: FontWeight.w300,
                                 ),
-                                children: <TextSpan>[
-                                  TextSpan(
-                                    text: '${itemState.item!.price}',
-                                    style: const TextStyle(
-                                        fontFamily: 'Lato',
-                                        fontSize: 24,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w500),
-                                  ),
-                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
+                              const SizedBox(height: 10),
+                              RichText(
+                                textAlign: TextAlign.start,
+                                text: TextSpan(
+                                  text: '\$ ',
+                                  style: const TextStyle(
+                                    fontFamily: 'Lato',
+                                    fontSize: 18,
+                                    color: MAIN_COLOR,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                      text: '${itemState.item!.price}',
+                                      style: const TextStyle(
+                                          fontFamily: 'Lato',
+                                          fontSize: 24,
+                                          color: Colors.black,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     )
                   ],
+                ),
+              ),
+            ),
+            Positioned(
+              top: 20,
+              right: 20,
+              child: IconButton(
+                onPressed: () => itemState.toggle_favorite(
+                    userState.user!.uid!, userState.user!.favorites!),
+                color: userState.isItemFav(itemState.item!.uid!)
+                    ? MAIN_COLOR
+                    : Colors.grey,
+                iconSize: 30,
+                icon: Icon(
+                  userState.isItemFav(itemState.item!.uid!)
+                      ? Icons.favorite
+                      : Icons.favorite_border,
                 ),
               ),
             ),

@@ -58,7 +58,11 @@ class CartItem extends StatelessWidget {
           children: [
             SizedBox(
               height: size.height * 0.1,
-              child: Image.asset(item.item!.images!.first),
+              child: Image(
+                image: NetworkImage(
+                  item.item!.images!.first,
+                ),
+              ),
             ),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,

@@ -7,6 +7,7 @@ import 'package:weave_marketplace/colors.dart';
 import 'package:weave_marketplace/screens/cart_screen/cart_screen.dart';
 import 'package:weave_marketplace/screens/upload_item_screen/upload_item_screen.dart';
 import 'package:weave_marketplace/state_managment/basket_state.dart';
+import 'package:weave_marketplace/state_managment/marketplace_state.dart';
 import 'package:weave_marketplace/state_managment/user_state.dart';
 
 class HomeAppbar extends StatelessWidget {
@@ -18,6 +19,7 @@ class HomeAppbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final marketState = Provider.of<MarketPlaceState>(context);
     final basketState = Provider.of<BasketState>(context);
     final userState = Provider.of<UserState>(context);
 
@@ -63,8 +65,12 @@ class HomeAppbar extends StatelessWidget {
             IconButton(
               onPressed: () => Navigator.of(context).push(
                 MaterialPageRoute(
-                  builder: (context) => ChangeNotifierProvider<UserState>.value(
-                    value: userState,
+                  builder: (context) => MultiProvider(
+                    providers: [
+                      ChangeNotifierProvider<UserState>.value(value: userState),
+                      ChangeNotifierProvider<MarketPlaceState>.value(
+                          value: marketState),
+                    ],
                     child: UploadItemScreen(),
                   ),
                 ),
