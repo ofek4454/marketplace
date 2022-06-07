@@ -49,81 +49,82 @@ class CartItem extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
-        width: double.infinity,
-        height: size.height * 0.15,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            SizedBox(
-              height: size.height * 0.1,
-              child: Image(
-                image: NetworkImage(
-                  item.item!.images!.first,
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius:
+                const BorderRadius.horizontal(left: Radius.circular(20)),
+            child: Image.network(
+              item.item!.images!.first,
+              height: double.infinity,
+              fit: BoxFit.cover,
+              width: size.width * 0.25,
+            ),
+          ),
+          const SizedBox(width: 35),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                item.item!.name!,
+                style: const TextStyle(
+                  fontFamily: 'Lato',
+                  fontSize: 18,
+                  fontWeight: FontWeight.w300,
                 ),
               ),
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  item.item!.name!,
+              RichText(
+                text: TextSpan(
+                  text: '\$ ',
                   style: const TextStyle(
                     fontFamily: 'Lato',
                     fontSize: 18,
-                    fontWeight: FontWeight.w300,
+                    color: MAIN_COLOR,
                   ),
-                ),
-                RichText(
-                  text: TextSpan(
-                    text: '\$ ',
-                    style: const TextStyle(
-                      fontFamily: 'Lato',
-                      fontSize: 18,
-                      color: MAIN_COLOR,
-                    ),
-                    children: <TextSpan>[
-                      TextSpan(
-                        text: '${item.item!.price}',
-                        style: const TextStyle(
-                            fontFamily: 'Lato',
-                            fontSize: 24,
-                            color: Colors.black,
-                            fontWeight: FontWeight.w500),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 10),
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    _build_btn(
-                      Icons.add,
-                      basketState.increase_quantity,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Text(
-                        '${item.quantity}',
-                        style: const TextStyle(
+                  children: <TextSpan>[
+                    TextSpan(
+                      text: '${item.item!.price}',
+                      style: const TextStyle(
                           fontFamily: 'Lato',
-                          fontSize: 18,
-                          fontWeight: FontWeight.w300,
-                        ),
-                      ),
-                    ),
-                    _build_btn(
-                      Icons.remove,
-                      basketState.decrease_quantity,
+                          fontSize: 24,
+                          color: Colors.black,
+                          fontWeight: FontWeight.w500),
                     ),
                   ],
                 ),
-              ],
-            ),
-            IconButton(
+              ),
+              const SizedBox(height: 10),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  _build_btn(
+                    Icons.add,
+                    basketState.increase_quantity,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text(
+                      '${item.quantity}',
+                      style: const TextStyle(
+                        fontFamily: 'Lato',
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                      ),
+                    ),
+                  ),
+                  _build_btn(
+                    Icons.remove,
+                    basketState.decrease_quantity,
+                  ),
+                ],
+              ),
+            ],
+          ),
+          const Spacer(),
+          Padding(
+            padding: const EdgeInsets.only(right: 20),
+            child: IconButton(
               splashColor: MAIN_COLOR,
               onPressed: () async {
                 HapticFeedback.mediumImpact();
@@ -168,8 +169,8 @@ class CartItem extends StatelessWidget {
                 Icons.delete_outline_rounded,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

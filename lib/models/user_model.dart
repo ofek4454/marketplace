@@ -6,6 +6,7 @@ class UserModel {
   String? email;
   String? communityId;
   List<String>? favorites;
+  List<String>? recents;
   Timestamp? createdAt;
 
   UserModel({
@@ -15,6 +16,7 @@ class UserModel {
     this.email,
     this.createdAt,
     this.communityId,
+    this.recents,
   });
 
   UserModel.fromDocumentSnapshot(DocumentSnapshot<Map<String, dynamic>> doc) {
@@ -23,7 +25,11 @@ class UserModel {
     email = doc['email'];
     createdAt = doc['createdAt'];
     communityId = doc['communityId'];
-    favorites =
-        doc['favorites'] != null ? List<String>.from(doc['favorites']) : [];
+    favorites = doc.data()!.containsKey('favorites')
+        ? List<String>.from(doc['favorites'])
+        : [];
+    recents = doc.data()!.containsKey('recents')
+        ? List<String>.from(doc['recents'])
+        : [];
   }
 }

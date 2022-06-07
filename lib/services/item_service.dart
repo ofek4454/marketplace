@@ -114,4 +114,20 @@ class ItemService {
     }
     return retVal;
   }
+
+  Future<String> addToRecents(String? uid, List<String> recents) async {
+    String retVal = 'error';
+    try {
+      await _firestore
+          .collection('users')
+          .doc(uid)
+          .update({'recents': recents});
+
+      retVal = 'success';
+    } catch (e) {
+      print(e);
+      rethrow;
+    }
+    return retVal;
+  }
 }

@@ -21,18 +21,21 @@ class ItemCard extends StatelessWidget {
     return SizedBox(
       height: size.height * 0.2,
       child: GestureDetector(
-        onTap: () => Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => MultiProvider(
-              providers: [
-                ChangeNotifierProvider<ItemState>.value(value: itemState),
-                ChangeNotifierProvider<UserState>.value(value: userState),
-                ChangeNotifierProvider<BasketState>.value(value: basketState),
-              ],
-              child: ItemScreen(heroTag: '${itemState.item!.uid}suggested'),
+        onTap: () {
+          userState.addToRecents(itemState.item!.uid!);
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => MultiProvider(
+                providers: [
+                  ChangeNotifierProvider<ItemState>.value(value: itemState),
+                  ChangeNotifierProvider<UserState>.value(value: userState),
+                  ChangeNotifierProvider<BasketState>.value(value: basketState),
+                ],
+                child: ItemScreen(heroTag: '${itemState.item!.uid}'),
+              ),
             ),
-          ),
-        ),
+          );
+        },
         child: Stack(
           children: [
             Card(
@@ -43,10 +46,7 @@ class ItemCard extends StatelessWidget {
               ),
               child: SizedBox(
                 width: double.infinity,
-                // padding: const EdgeInsets.only(
-                //     left: 10, right: 20, top: 10, bottom: 10),
                 child: Row(
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Hero(
                       tag: '${itemState.item!.uid}',
@@ -56,7 +56,7 @@ class ItemCard extends StatelessWidget {
                         child: Image.network(
                           itemState.item!.images!.first,
                           fit: BoxFit.cover,
-                          //width: double.infinity,
+                          width: size.width * 0.3,
                           height: double.infinity,
                         ),
                       ),

@@ -32,20 +32,15 @@ class SuggestedItemCard extends StatelessWidget {
       ),
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 10),
-        //elevation: 10,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
         child: SizedBox(
-          //padding: const EdgeInsets.all(10),
           width: size.width * 0.6,
           child: Stack(
             alignment: Alignment.center,
-            // overflow: Overflow.visible,
             children: [
               Column(
-                // mainAxisSize: MainAxisSize.min,
-                //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Hero(
