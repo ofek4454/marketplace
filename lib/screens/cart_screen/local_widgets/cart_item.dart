@@ -57,7 +57,7 @@ class CartItem extends StatelessWidget {
                 const BorderRadius.horizontal(left: Radius.circular(20)),
             child: ImageFromNetwork(
               item.item!.images!.first,
-              height: double.infinity,
+              height: size.height * 0.16,
               width: size.width * 0.25,
             ),
           ),
