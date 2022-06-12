@@ -34,35 +34,15 @@ class ItemScreen extends StatelessWidget {
           height: size.height,
           child: Column(
             children: [
-              Container(
-                padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
-                color: const Color(0x0F2F2F20),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const BackButton(
-                      color: Colors.black,
-                    ),
-                    IconButton(
-                      onPressed: () => itemState.toggle_favorite(
-                          userState.user!.uid!, userState.user!.favorites!),
-                      color: userState.isItemFav(itemState.item!.uid!)
-                          ? MAIN_COLOR
-                          : Colors.grey,
-                      iconSize: 30,
-                      icon: Icon(
-                        userState.isItemFav(itemState.item!.uid!)
-                            ? Icons.favorite
-                            : Icons.favorite_border,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
               Expanded(
                 child: ListView(
                   children: [
-                    ImageViewer(heroTag: heroTag),
+                    Stack(
+                      children: [
+                        ImageViewer(heroTag: heroTag),
+                        _app_bar(itemState, userState),
+                      ],
+                    ),
                     const SizedBox(height: 10),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -199,6 +179,46 @@ class ItemScreen extends StatelessWidget {
           ),
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      ),
+    );
+  }
+
+  Container _app_bar(ItemState itemState, UserState userState) {
+    return Container(
+      padding: const EdgeInsets.only(right: 20, left: 20, top: 10),
+      // color: Colors.white24,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white54,
+            ),
+            child: const BackButton(
+              color: Colors.black,
+            ),
+          ),
+          Container(
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.white54,
+            ),
+            child: IconButton(
+              onPressed: () => itemState.toggle_favorite(
+                  userState.user!.uid!, userState.user!.favorites!),
+              color: userState.isItemFav(itemState.item!.uid!)
+                  ? MAIN_COLOR
+                  : Colors.black,
+              iconSize: 30,
+              icon: Icon(
+                userState.isItemFav(itemState.item!.uid!)
+                    ? Icons.favorite
+                    : Icons.favorite_border,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

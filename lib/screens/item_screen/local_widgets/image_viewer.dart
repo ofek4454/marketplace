@@ -24,58 +24,66 @@ class _ImageViewerState extends State<ImageViewer> {
 
     return Container(
       width: double.infinity,
-      height: size.height * 0.4,
+      height: size.height * 0.45,
       decoration: const BoxDecoration(
         color: Color(0x0F2F2F20),
         borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(40),
         ),
       ),
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      child: Stack(
+        alignment: Alignment.bottomCenter,
         children: [
-          Hero(
-            tag: widget.heroTag!,
-            child: Image(
-              image: NetworkImage(
-                itemState.item!.images!.first,
-              ),
-              height: size.height * 0.25,
-            ),
-          ),
-          SizedBox(
-            height: size.height * 0.08,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: itemState.item!.images!.length,
-              itemBuilder: (context, index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: current_image == index ? MAIN_COLOR : Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                child: InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onTap: () => setState(() => current_image = index),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: ImageFromNetwork(
-                      itemState.item!.images!.first,
-                    ),
-                  ),
+          PageView.builder(
+            onPageChanged: (value) => setState(() {
+              current_image = value;
+            }),
+            pageSnapping: true,
+            itemCount: itemState.item!.images!.length,
+            itemBuilder: (ctx, index) => Hero(
+              tag: widget.heroTag!,
+              child: ClipRRect(
+                borderRadius: const BorderRadius.vertical(
+                  bottom: Radius.circular(40),
+                ),
+                child: ImageFromNetwork(
+                  itemState.item!.images![index],
+                  height: size.height * 0.45,
+                  width: double.infinity,
                 ),
               ),
             ),
-          )
+          ),
+          if (itemState.item!.images!.length > 1)
+            Container(
+              margin: const EdgeInsets.only(bottom: 10),
+              // padding: const EdgeInsets.symmetric(horizontal: 5),
+              decoration: BoxDecoration(
+                color: Colors.white38,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: indicators(itemState.item!.images!.length),
+              ),
+            ),
         ],
       ),
     );
+  }
+
+  List<Widget> indicators(imagesLength) {
+    return List<Widget>.generate(imagesLength, (index) {
+      return Container(
+        margin: const EdgeInsets.all(5),
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(
+          color: current_image == index ? MAIN_COLOR : Colors.black26,
+          shape: BoxShape.circle,
+        ),
+      );
+    });
   }
 }

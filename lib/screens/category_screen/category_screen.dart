@@ -68,7 +68,7 @@ class CategoryScreen extends StatelessWidget {
                       ),
                     // rest of page
                     const SizedBox(height: 20),
-                    _build_title('Popular', filter: true),
+                    _build_title('Popular', filter: false),
                     // all products
                     ...items.map(
                       (item) => ChangeNotifierProvider<ItemState>(

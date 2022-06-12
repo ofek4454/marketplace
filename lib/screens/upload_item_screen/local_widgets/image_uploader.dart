@@ -82,51 +82,51 @@ class _ImageViewerState extends State<ImageViewer> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      width: double.infinity,
-      height: size.height * 0.4,
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Image.file(
-            widget.images![current_image],
-            height: size.height * 0.2,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(
-            height: size.height * 0.08,
-            child: ListView.builder(
-              shrinkWrap: true,
-              scrollDirection: Axis.horizontal,
-              itemCount: widget.images!.length,
-              itemBuilder: (context, index) => AnimatedContainer(
-                duration: const Duration(milliseconds: 200),
-                decoration: BoxDecoration(
-                    border: Border.all(
-                      color: current_image == index ? MAIN_COLOR : Colors.grey,
-                    ),
-                    borderRadius: BorderRadius.circular(20)),
-                margin: const EdgeInsets.symmetric(horizontal: 5),
-                child: InkWell(
-                  customBorder: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  onTap: () => setState(() => current_image = index),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    child: Image.file(
-                      widget.images![index],
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ),
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        PageView.builder(
+          itemCount: widget.images!.length,
+          onPageChanged: (index) => setState(() {
+            current_image = index;
+          }),
+          itemBuilder: (ctx, index) => ClipRRect(
+            borderRadius: BorderRadius.circular(20),
+            child: Image.file(
+              widget.images![index],
+              fit: BoxFit.cover,
             ),
-          )
-        ],
-      ),
+          ),
+        ),
+        if (widget.images!.length > 1)
+          Container(
+            margin: const EdgeInsets.only(bottom: 10),
+            // padding: const EdgeInsets.symmetric(horizontal: 5),
+            decoration: BoxDecoration(
+              color: Colors.white38,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: indicators(widget.images!.length),
+            ),
+          ),
+      ],
     );
+  }
+
+  List<Widget> indicators(imagesLength) {
+    return List<Widget>.generate(imagesLength, (index) {
+      return Container(
+        margin: const EdgeInsets.all(5),
+        width: 10,
+        height: 10,
+        decoration: BoxDecoration(
+          color: current_image == index ? MAIN_COLOR : Colors.black26,
+          shape: BoxShape.circle,
+        ),
+      );
+    });
   }
 }
