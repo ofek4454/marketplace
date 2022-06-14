@@ -3,15 +3,17 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:weave_marketplace/colors.dart';
 
 class ImageUploader extends StatefulWidget {
-  final Function? get_image, clear_images;
+  final Function? get_image, clear_images, removeSingleImage;
   List<File>? images;
   ImageUploader(
-      {@required this.images,
-      @required this.get_image,
-      @required this.clear_images,
+      {required this.images,
+      required this.get_image,
+      required this.clear_images,
+      required this.removeSingleImage,
       Key? key})
       : super(key: key);
 
@@ -42,7 +44,7 @@ class _ImageUploaderState extends State<ImageUploader> {
                     size: 30,
                     color: MAIN_COLOR,
                   )
-                : ImageViewer(widget.images),
+                : ImageViewer(widget.images, widget.removeSingleImage!),
           ),
         ),
         if (widget.images!.isNotEmpty)
@@ -69,7 +71,9 @@ class _ImageUploaderState extends State<ImageUploader> {
 
 class ImageViewer extends StatefulWidget {
   List<File>? images;
-  ImageViewer(this.images, {Key? key}) : super(key: key);
+  final Function removeSingleImage;
+  ImageViewer(this.images, this.removeSingleImage, {Key? key})
+      : super(key: key);
 
   @override
   State<ImageViewer> createState() => _ImageViewerState();
@@ -80,8 +84,6 @@ class _ImageViewerState extends State<ImageViewer> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-
     return Stack(
       alignment: Alignment.bottomCenter,
       children: [
@@ -92,9 +94,28 @@ class _ImageViewerState extends State<ImageViewer> {
           }),
           itemBuilder: (ctx, index) => ClipRRect(
             borderRadius: BorderRadius.circular(20),
-            child: Image.file(
-              widget.images![index],
-              fit: BoxFit.cover,
+            child: Dismissible(
+              background: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: MAIN_COLOR,
+                ),
+                alignment: Alignment.center,
+                child: const Icon(
+                  Icons.delete_outline_rounded,
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ),
+              direction: DismissDirection.up,
+              confirmDismiss: (_) => are_you_sure(),
+              onDismissed: (_) => widget.removeSingleImage(index),
+              key: ValueKey(widget.images![index].uri.toString()),
+              child: Image.file(
+                widget.images![index],
+                fit: BoxFit.cover,
+                width: double.infinity,
+              ),
             ),
           ),
         ),
@@ -128,5 +149,44 @@ class _ImageViewerState extends State<ImageViewer> {
         ),
       );
     });
+  }
+
+  Future<bool> are_you_sure() async {
+    HapticFeedback.mediumImpact();
+    bool? res = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Are you sure?'),
+        content: const Text('This action canot be canceled'),
+        actions: [
+          TextButton(
+            style: ButtonStyle(
+              overlayColor: MaterialStateColor.resolveWith(
+                  (states) => MAIN_COLOR.withAlpha(100)),
+            ),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(
+                fontFamily: 'Lato',
+                color: Colors.black,
+              ),
+            ),
+            onPressed: () => Navigator.of(context).pop(false),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(primary: MAIN_COLOR),
+            child: const Text(
+              'Remove',
+              style: TextStyle(
+                fontFamily: 'Lato',
+                color: Colors.white,
+              ),
+            ),
+            onPressed: () => Navigator.of(context).pop(true),
+          ),
+        ],
+      ),
+    );
+    return res!;
   }
 }

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:weave_marketplace/colors.dart';
 
 class ImageFromNetwork extends StatelessWidget {
-  String url;
-  double? width, height;
+  final String url;
+  final double? width, height;
 
-  ImageFromNetwork(this.url, {this.height, this.width, Key? key})
+  const ImageFromNetwork(this.url, {this.height, this.width, Key? key})
       : super(key: key);
 
   @override

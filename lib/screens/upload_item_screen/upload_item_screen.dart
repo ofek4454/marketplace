@@ -5,6 +5,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
@@ -241,6 +242,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     final marketState = Provider.of<MarketPlaceState>(context, listen: false);
     final List<String> _items =
         marketState.categories!.map<String>((e) => e.name!).toList();
+    _items.remove('All');
 
     final List<String>? results = await showDialog(
       context: context,
@@ -314,6 +316,12 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
     }
   }
 
+  void removeSingleImage(int index) {
+    setState(() {
+      images.removeAt(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -349,6 +357,7 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
                                 images: images,
                                 get_image: get_images,
                                 clear_images: clear_images,
+                                removeSingleImage: removeSingleImage,
                               ),
                               const SizedBox(height: 10),
                               _build_input_box(
