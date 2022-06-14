@@ -1,5 +1,6 @@
 // ignore_for_file: non_constant_identifier_names
 
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:weave_marketplace/colors.dart';
@@ -16,59 +17,83 @@ class ImageViewer extends StatefulWidget {
 
 class _ImageViewerState extends State<ImageViewer> {
   int current_image = 0;
+  PageController controller = PageController();
+
+  void showInFullScreen(List<String> images) {
+    MultiImageProvider multiImageProvider = MultiImageProvider(
+      images
+          .map<ImageProvider<Object>>((url) => Image.network(url).image)
+          .toList(),
+    );
+
+    showImageViewerPager(
+      context,
+      multiImageProvider,
+      onViewerDismissed: (page) {
+        controller.jumpToPage(page);
+        setState(() {
+          current_image = page;
+        });
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final itemState = Provider.of<ItemState>(context, listen: false);
 
-    return Container(
-      width: double.infinity,
-      height: size.height * 0.45,
-      decoration: const BoxDecoration(
-        color: Color(0x0F2F2F20),
-        borderRadius: BorderRadius.vertical(
-          bottom: Radius.circular(40),
-        ),
-      ),
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          PageView.builder(
-            onPageChanged: (value) => setState(() {
-              current_image = value;
-            }),
-            pageSnapping: true,
-            itemCount: itemState.item!.images!.length,
-            itemBuilder: (ctx, index) => Hero(
-              tag: widget.heroTag!,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(
-                  bottom: Radius.circular(40),
-                ),
-                child: ImageFromNetwork(
-                  itemState.item!.images![index],
-                  height: size.height * 0.45,
-                  width: double.infinity,
-                ),
-              ),
-            ),
+    return GestureDetector(
+      onTap: () => showInFullScreen(itemState.item!.images!),
+      child: Container(
+        width: double.infinity,
+        height: size.height * 0.45,
+        decoration: const BoxDecoration(
+          color: Color(0x0F2F2F20),
+          borderRadius: BorderRadius.vertical(
+            bottom: Radius.circular(40),
           ),
-          if (itemState.item!.images!.length > 1)
-            Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              // padding: const EdgeInsets.symmetric(horizontal: 5),
-              decoration: BoxDecoration(
-                color: Colors.white38,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: indicators(itemState.item!.images!.length),
+        ),
+        child: Stack(
+          alignment: Alignment.bottomCenter,
+          children: [
+            PageView.builder(
+              controller: controller,
+              onPageChanged: (value) => setState(() {
+                current_image = value;
+              }),
+              pageSnapping: true,
+              itemCount: itemState.item!.images!.length,
+              itemBuilder: (ctx, index) => Hero(
+                tag: widget.heroTag!,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.vertical(
+                    bottom: Radius.circular(40),
+                  ),
+                  child: ImageFromNetwork(
+                    itemState.item!.images![index],
+                    height: size.height * 0.45,
+                    width: double.infinity,
+                  ),
+                ),
               ),
             ),
-        ],
+            if (itemState.item!.images!.length > 1)
+              Container(
+                margin: const EdgeInsets.only(bottom: 10),
+                // padding: const EdgeInsets.symmetric(horizontal: 5),
+                decoration: BoxDecoration(
+                  color: Colors.white38,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: indicators(itemState.item!.images!.length),
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
