@@ -43,8 +43,7 @@ class _ImageViewerState extends State<ImageViewer> {
     final size = MediaQuery.of(context).size;
     final itemState = Provider.of<ItemState>(context, listen: false);
 
-    return GestureDetector(
-      onTap: () => showInFullScreen(itemState.item!.images!),
+    return InteractiveViewer(
       child: Container(
         width: double.infinity,
         height: size.height * 0.45,
@@ -92,6 +91,22 @@ class _ImageViewerState extends State<ImageViewer> {
                   children: indicators(itemState.item!.images!.length),
                 ),
               ),
+            Positioned(
+              bottom: 10,
+              right: 20,
+              child: Container(
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white54,
+                ),
+                child: IconButton(
+                  onPressed: () => showInFullScreen(itemState.item!.images!),
+                  icon: const Icon(
+                    Icons.open_in_full_rounded,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),

@@ -53,8 +53,20 @@ class _UploadItemScreenState extends State<UploadItemScreen> {
   }
 
   Future<void> _upload() async {
-    final validate = _formKey.currentState!.validate();
+    bool validate = _formKey.currentState!.validate();
     if (!validate) return;
+
+    if (images.length > 5) {
+      validate = false;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text(
+              'Cannot upload more than 5 images, please remove some.'),
+          backgroundColor: Theme.of(context).errorColor,
+        ),
+      );
+      return;
+    }
 
     try {
       final userState = Provider.of<UserState>(context, listen: false);
