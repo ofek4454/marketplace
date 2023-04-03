@@ -13,7 +13,9 @@ in this project i used Firebase as a backend service.
 ## Photos
 
 login:
-![Screenshot_1680533025](https://user-images.githubusercontent.com/17598441/229547769-5e672bab-ce1d-4327-85a4-066f1a2e5310.png | width=200)
+<div style="width: 50"%>
+  ![Screenshot_1680533025](https://user-images.githubusercontent.com/17598441/229547769-5e672bab-ce1d-4327-85a4-066f1a2e5310.png)
+</div>
 
 home screen:
 ![Screenshot_1680533093](https://user-images.githubusercontent.com/17598441/229547923-06ff7216-727e-48bb-b007-3acceecfac02.png | width=200)
